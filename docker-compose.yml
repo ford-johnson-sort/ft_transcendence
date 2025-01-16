@@ -1,0 +1,62 @@
+name: ft-transcendence
+
+services:
+  db_auth:
+    image: mariadb:lts
+    networks:
+      - transcendence
+    env_file:
+      - ./db_auth/db_auth.env
+    environment:
+      MARIADB_PASSWORD_FILE: /run/secrets/db_auth_pw
+    secrets:
+      - db_auth_pw
+    volumes:
+      - db_auth:/app/volume:rw
+    restart: always
+  
+  frontend:
+    image: nginx:stable
+    networks:
+      - transcendence
+    volumes:
+      - ../ft_transcendence-frontend:/usr/share/nginx/html:ro
+    restart: always
+  
+  be-auth:
+    build: ../ft_transcendence-be-auth
+    networks:
+      - transcendence
+    # environment:
+    # secrets:
+    # TODO pass db connection info, 42 intra OAuth key, jwt key
+    restart: always
+  
+  proxy:
+    image: nginx:stable
+    networks:
+      - transcendence
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    # environment:
+    # secrets:
+    # TODO TLS key as secrets
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - frontend
+      - be-auth
+      # - be-chat
+      # - be-game
+    restart: always
+
+networks:
+  transcendence:
+
+volumes:
+  db_auth:
+
+secrets:
+  db_auth:
+    file: ./db_auth/db_auth_pw.env
