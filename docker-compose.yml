@@ -38,9 +38,9 @@ services:
       - transcendence
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-    # environment:
-    # secrets:
-    # TODO TLS key as secrets
+    secrets:
+      - proxy_ssl_secret
+      - proxy_ssl_pub
     ports:
       - 80:80
       - 443:443
@@ -60,3 +60,7 @@ volumes:
 secrets:
   db_auth_pw:
     file: ./db_auth/db_auth_pw.env
+  proxy_ssl_secret:
+    file: ./proxy/ssl.key
+  proxy_ssl_pub:
+    file: ./proxy/ssl.crt
