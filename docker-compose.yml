@@ -2,17 +2,17 @@ name: ft-transcendence
 
 services:
   db_auth:
-    image: mariadb:lts
+    image: postgres:latest
     networks:
       - transcendence
     env_file:
       - ./db_auth/db_auth.env
     environment:
-      MARIADB_PASSWORD_FILE: /run/secrets/db_auth_pw
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_auth_pw
     secrets:
       - db_auth_pw
     volumes:
-      - db_auth:/app/volume:rw
+      - db_auth:/var/lib/postgresql/data:rw
     restart: always
   
   frontend:
@@ -58,5 +58,5 @@ volumes:
   db_auth:
 
 secrets:
-  db_auth:
+  db_auth_pw:
     file: ./db_auth/db_auth_pw.env
