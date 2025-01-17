@@ -1,7 +1,7 @@
 name: ft-transcendence
 
 services:
-  db_auth:
+  db-auth:
     image: postgres:latest
     networks:
       - transcendence
@@ -14,24 +14,7 @@ services:
     volumes:
       - db_auth:/var/lib/postgresql/data:rw
     restart: always
-  
-  frontend:
-    image: nginx:stable
-    networks:
-      - transcendence
-    volumes:
-      - ../ft_transcendence-frontend:/usr/share/nginx/html:ro
-    restart: always
-  
-  be-auth:
-    build: ../ft_transcendence-be-auth
-    networks:
-      - transcendence
-    # environment:
-    # secrets:
-    # TODO pass db connection info, 42 intra OAuth key, jwt key
-    restart: always
-  
+
   proxy:
     image: nginx:stable
     networks:
@@ -44,18 +27,51 @@ services:
     ports:
       - 80:80
       - 443:443
+    restart: always
+
+  frontend:
+    image: nginx:stable
+    networks:
+      - transcendence
+    volumes:
+      - ../ft_transcendence-frontend:/usr/share/nginx/html:ro
+    restart: always
+
+  be-auth:
+    build: ../ft_transcendence-be-auth
+    networks:
+      - transcendence
+    # TODO pass db connection info, 42 intra OAuth key, jwt key
     depends_on:
-      - frontend
-      - be-auth
-      # - be-chat
-      # - be-game
+      - db-auth
+      - proxy
+    restart: always
+
+  be-chat:
+    build: ../ft_transcendence-be-chat
+    networks:
+      - transcendence
+    # TODO pass db connection info, 42 intra OAuth key, jwt key
+    depends_on:
+      - proxy
+    restart: always
+
+  be-game:
+    build: ../ft_transcendence-be-game
+    networks:
+      - transcendence
+    # TODO pass db connection info, 42 intra OAuth key, jwt key
+    depends_on:
+      - proxy
     restart: always
 
 networks:
   transcendence:
 
+
 volumes:
   db_auth:
+
 
 secrets:
   db_auth_pw:
