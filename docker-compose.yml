@@ -6,7 +6,7 @@ services:
     networks:
       - transcendence
     env_file:
-      - ./db_auth/db_auth.env
+      - ./env/db-auth.env
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_auth_pw
     secrets:
@@ -39,6 +39,20 @@ services:
 
   be-auth:
     build: ../ft_transcendence-be-auth
+    env_file:
+      - ./env/be-auth.env
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_auth_pw
+      DJANGO_SECRET_FILE: /run/secrets/django_secret
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      OAUTH_UID_FILE: /run/secrets/oauth_uid
+      OAUTH_SECRET_FILE: /run/secrets/oauth_secret
+    secrets:
+      - db_auth_pw
+      - django_secret
+      - jwt_secret
+      - oauth_uid
+      - oauth_secret
     networks:
       - transcendence
     # TODO pass db connection info, 42 intra OAuth key, jwt key
@@ -47,23 +61,23 @@ services:
       - proxy
     restart: always
 
-  be-chat:
-    build: ../ft_transcendence-be-chat
-    networks:
-      - transcendence
-    # TODO pass db connection info, 42 intra OAuth key, jwt key
-    depends_on:
-      - proxy
-    restart: always
+  # be-chat:
+  #   build: ../ft_transcendence-be-chat
+  #   networks:
+  #     - transcendence
+  #   # TODO pass db connection info, 42 intra OAuth key, jwt key
+  #   depends_on:
+  #     - proxy
+  #   restart: always
 
-  be-game:
-    build: ../ft_transcendence-be-game
-    networks:
-      - transcendence
-    # TODO pass db connection info, 42 intra OAuth key, jwt key
-    depends_on:
-      - proxy
-    restart: always
+  # be-game:
+  #   build: ../ft_transcendence-be-game
+  #   networks:
+  #     - transcendence
+  #   # TODO pass db connection info, 42 intra OAuth key, jwt key
+  #   depends_on:
+  #     - proxy
+  #   restart: always
 
 networks:
   transcendence:
@@ -75,7 +89,15 @@ volumes:
 
 secrets:
   db_auth_pw:
-    file: ./db_auth/db_auth_pw.env
+    file: ./env/db-auth-secret.env
+  django_secret:
+    file: ./env/django-secret.env
+  jwt_secret:
+    file: ./env/jwt-secret.env
+  oauth_uid:
+    file: ./env/oauth-uid.env
+  oauth_secret:
+    file: ./env/oauth-secret.env
   proxy_ssl_secret:
     file: ./proxy/ssl.key
   proxy_ssl_pub:
