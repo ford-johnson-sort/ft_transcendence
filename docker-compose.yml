@@ -12,8 +12,8 @@ services:
       - proxy_ssl_secret
       - proxy_ssl_pub
     ports:
-      - 8000:80
-      - 44300:443
+      - 80:80
+      - 443:443
     restart: always
 
   # frontend service
