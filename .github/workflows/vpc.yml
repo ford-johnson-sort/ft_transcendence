@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Trigger Deployment on VPC
-        uses: appleboy/ssh-action@v0.11.4
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPC_HOST }}
           username: ${{ secrets.VPC_USER }}
