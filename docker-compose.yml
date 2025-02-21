@@ -53,6 +53,7 @@ services:
       OAUTH_UID_FILE: /run/secrets/oauth_uid
       OAUTH_SECRET_FILE: /run/secrets/oauth_secret
       DJANGO_SUPERUSER: /run/secrets/django_admin
+      EMAIL_PASSWORD_FILE: /run/secrets/email_password
     secrets:
       - db_auth_pw
       - django_secret
@@ -60,6 +61,7 @@ services:
       - oauth_uid
       - oauth_secret
       - django_admin
+      - email_password
     networks:
       - transcendence
     volumes:
@@ -163,6 +165,8 @@ secrets:
     file: ./env/oauth-uid.env
   oauth_secret:
     file: ./env/oauth-secret.env
+  email_password:
+    file: ./env/email-password.env
   proxy_ssl_secret:
     file: ./proxy/ssl.key
   proxy_ssl_pub:
