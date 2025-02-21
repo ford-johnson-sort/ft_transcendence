@@ -53,7 +53,7 @@ services:
       OAUTH_UID_FILE: /run/secrets/oauth_uid
       OAUTH_SECRET_FILE: /run/secrets/oauth_secret
       DJANGO_SUPERUSER: /run/secrets/django_admin
-      EMAIL_PASSWORD_FILE: /run/secrets/email_password
+      EMAIL_HOST_PASSWORD_FILE: /run/secrets/email_password
     secrets:
       - db_auth_pw
       - django_secret
