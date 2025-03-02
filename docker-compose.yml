@@ -71,39 +71,6 @@ services:
       - proxy
     restart: always
 
-  # chatting services
-  db-chat:
-    image: postgres:latest
-    networks:
-      - transcendence
-    env_file:
-      - ./env/db-chat.env
-    environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_chat_pw
-    secrets:
-      - db_chat_pw
-    restart: always
-
-  # chatting services
-  be-chat:
-    build: ../ft_transcendence-be-chat
-    env_file:
-      - ./env/be-chat.env
-    environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_chat_pw
-      DJANGO_SECRET_FILE: /run/secrets/django_secret
-      JWT_SECRET_FILE: /run/secrets/jwt_secret
-    secrets:
-      - db_chat_pw
-      - django_secret
-      - jwt_secret
-    networks:
-      - transcendence
-    depends_on:
-      - db-chat
-      - proxy
-    restart: always
-
   # game services
   db-game:
     image: postgres:latest
