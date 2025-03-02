@@ -83,6 +83,13 @@ services:
     secrets:
       - db_game_pw
     restart: always
+  
+  # game services
+  redis-game:
+    image: redis:latest
+    networks:
+      - transcendence
+    restart: always
 
   # game services
   be-game:
@@ -103,6 +110,8 @@ services:
       - db_auth:/var/lib/postgresql/data:rw
     depends_on:
       - proxy
+      - db-game
+      - redis-game
     restart: always
 
 networks:
